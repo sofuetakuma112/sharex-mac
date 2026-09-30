@@ -20,13 +20,14 @@ final class Settings {
     static let shared = Settings()
 
     static let screenshotsFolderKey = "screenshotsFolder"
+    static let recentFilesLimit = 10
 
-    private let defaults = UserDefaults.standard
+    private let defaults: UserDefaults
     private let recentFilesKey = "recentFiles"
-    private let recentFilesLimit = 10
     private let thumbnailSizeKey = "imageHistoryThumbnailSize"
 
-    private init() {
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
         var registered: [String: Any] = Dictionary(uniqueKeysWithValues: AfterCaptureTask.allCases.map { ($0.rawValue, true) })
         registered[thumbnailSizeKey] = 160.0
         defaults.register(defaults: registered)
@@ -64,6 +65,6 @@ final class Settings {
         var paths = defaults.stringArray(forKey: recentFilesKey) ?? []
         paths.removeAll { $0 == url.path }
         paths.insert(url.path, at: 0)
-        defaults.set(Array(paths.prefix(recentFilesLimit)), forKey: recentFilesKey)
+        defaults.set(Array(paths.prefix(Self.recentFilesLimit)), forKey: recentFilesKey)
     }
 }

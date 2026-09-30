@@ -4,9 +4,13 @@ import UniformTypeIdentifiers
 import UserNotifications
 
 final class CaptureOutput {
-    private let settings = Settings.shared
+    private let settings: Settings
     private lazy var captureSound = NSSound(named: "CaptureSound")
     private lazy var completedSound = NSSound(named: "TaskCompletedSound")
+
+    init(settings: Settings = .shared) {
+        self.settings = settings
+    }
 
     func playCaptureSound() {
         guard settings.isEnabled(.playSound) else { return }
@@ -32,7 +36,7 @@ final class CaptureOutput {
         }
     }
 
-    private func save(_ captured: CapturedImage) throws -> URL {
+    func save(_ captured: CapturedImage) throws -> URL {
         let folder = settings.screenshotsFolder
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         var url = folder.appendingPathComponent(Self.randomName()).appendingPathExtension("png")
@@ -68,7 +72,7 @@ final class CaptureOutput {
         UNUserNotificationCenter.current().add(request)
     }
 
-    private static func randomName() -> String {
+    static func randomName() -> String {
         let characters = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
         return String((0..<10).map { _ in characters.randomElement()! })
     }

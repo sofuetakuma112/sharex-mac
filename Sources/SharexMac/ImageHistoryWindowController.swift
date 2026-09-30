@@ -7,9 +7,9 @@ struct HistoryImage {
 }
 
 final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDataSource, NSSearchFieldDelegate {
-    private static let imageExtensions: Set<String> = ["png", "jpg", "jpeg", "gif", "heic", "tif", "tiff", "bmp", "webp"]
+    static let imageExtensions: Set<String> = ["png", "jpg", "jpeg", "gif", "heic", "tif", "tiff", "bmp", "webp"]
 
-    private let settings = Settings.shared
+    private let settings: Settings
     private let thumbnails = ThumbnailCache()
     private let collectionView = HistoryCollectionView()
     private let layout = NSCollectionViewFlowLayout()
@@ -29,7 +29,8 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
     private var scanGeneration = 0
     private var thumbnailPixelSize = 0
 
-    init() {
+    init(settings: Settings = .shared) {
+        self.settings = settings
         let window = HistoryWindow(
             contentRect: NSRect(x: 0, y: 0, width: 900, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
@@ -168,7 +169,7 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
         }
     }
 
-    private static func scan(_ folder: URL) -> [HistoryImage] {
+    static func scan(_ folder: URL) -> [HistoryImage] {
         let keys: [URLResourceKey] = [.isRegularFileKey, .creationDateKey, .contentModificationDateKey]
         guard let enumerator = FileManager.default.enumerator(at: folder, includingPropertiesForKeys: keys, options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
             return []

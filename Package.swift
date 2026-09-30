@@ -8,6 +8,11 @@ let package = Package(
         .executableTarget(
             name: "SharexMac",
             path: "Sources/SharexMac"
-        )
+        ),
+        .testTarget(
+            name: "SharexMacTests",
+            dependencies: ["SharexMac"],
+            path: "Tests/SharexMacTests"
+        ),
     ]
 )
