@@ -8,12 +8,13 @@ BUNDLE_ID="io.github.sofuetakuma112.sharex-mac"
 BUILD_DIR="$ROOT/build.noindex"
 APP="$BUILD_DIR/$APP_NAME.app"
 SIGN_IDENTITY="${SIGN_IDENTITY:--}"
+ARCH="${ARCH:-$(uname -m)}"
 
-swift build -c release --arch arm64
+swift build -c release --arch "$ARCH"
 
 /bin/rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$(swift build -c release --arch arm64 --show-bin-path)/SharexMac" "$APP/Contents/MacOS/$APP_NAME"
+cp "$(swift build -c release --arch "$ARCH" --show-bin-path)/SharexMac" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/CaptureSound.wav" "$ROOT/Resources/TaskCompletedSound.wav" "$APP/Contents/Resources/"
 cp -R "$ROOT/Resources/ja.lproj" "$APP/Contents/Resources/"
