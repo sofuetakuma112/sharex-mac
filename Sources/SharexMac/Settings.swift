@@ -19,6 +19,8 @@ enum AfterCaptureTask: String, CaseIterable {
 final class Settings {
     static let shared = Settings()
 
+    static let screenshotsFolderKey = "screenshotsFolder"
+
     private let defaults = UserDefaults.standard
     private let recentFilesKey = "recentFiles"
     private let recentFilesLimit = 10
@@ -44,7 +46,10 @@ final class Settings {
     }
 
     var screenshotsFolder: URL {
-        FileManager.default.homeDirectoryForCurrentUser
+        if let path = defaults.string(forKey: Self.screenshotsFolderKey), !path.isEmpty {
+            return URL(fileURLWithPath: (path as NSString).expandingTildeInPath, isDirectory: true)
+        }
+        return FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent("Pictures", isDirectory: true)
             .appendingPathComponent("sharex-mac", isDirectory: true)
     }
