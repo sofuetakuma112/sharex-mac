@@ -20,11 +20,10 @@ cp "$ROOT/Resources/CaptureSound.wav" "$ROOT/Resources/TaskCompletedSound.wav" "
 ICONSET="$BUILD_DIR/AppIcon.iconset"
 /bin/rm -rf "$ICONSET"
 mkdir -p "$ICONSET"
-sips -s format png "$ROOT/Resources/ShareX_Icon.ico" --out "$BUILD_DIR/icon.png" >/dev/null
-for size in 16 32 128 256; do
-  sips -z "$size" "$size" "$BUILD_DIR/icon.png" --out "$ICONSET/icon_${size}x${size}.png" >/dev/null
+for size in 16 32 128 256 512; do
+  sips -z "$size" "$size" "$ROOT/Resources/AppIcon.png" --out "$ICONSET/icon_${size}x${size}.png" >/dev/null
   double=$((size * 2))
-  sips -z "$double" "$double" "$BUILD_DIR/icon.png" --out "$ICONSET/icon_${size}x${size}@2x.png" >/dev/null
+  sips -z "$double" "$double" "$ROOT/Resources/AppIcon.png" --out "$ICONSET/icon_${size}x${size}@2x.png" >/dev/null
 done
 iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
 
