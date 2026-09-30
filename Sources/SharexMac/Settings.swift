@@ -46,7 +46,7 @@ final class Settings {
     var screenshotsFolder: URL {
         FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent("Pictures", isDirectory: true)
-            .appendingPathComponent("ShareX", isDirectory: true)
+            .appendingPathComponent("sharex-mac", isDirectory: true)
     }
 
     var recentFiles: [URL] {

@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "ShareXMac",
+    name: "sharex-mac",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "ShareXMac",
-            path: "Sources/ShareXMac"
+            name: "SharexMac",
+            path: "Sources/SharexMac"
         )
     ]
 )

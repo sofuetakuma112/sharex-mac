@@ -3,15 +3,17 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 ROOT="$(pwd)"
+APP_NAME="sharex-mac"
+BUNDLE_ID="io.github.sofuetakuma112.sharex-mac"
 BUILD_DIR="$ROOT/build.noindex"
-APP="$BUILD_DIR/ShareX.app"
+APP="$BUILD_DIR/$APP_NAME.app"
 SIGN_IDENTITY="${SIGN_IDENTITY:--}"
 
 swift build -c release --arch arm64
 
 /bin/rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$(swift build -c release --arch arm64 --show-bin-path)/ShareXMac" "$APP/Contents/MacOS/ShareX"
+cp "$(swift build -c release --arch arm64 --show-bin-path)/SharexMac" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/CaptureSound.wav" "$ROOT/Resources/TaskCompletedSound.wav" "$APP/Contents/Resources/"
 
@@ -26,13 +28,13 @@ for size in 16 32 128 256; do
 done
 iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
 
-codesign --force --sign "$SIGN_IDENTITY" --identifier local.sharex.mac "$APP"
+codesign --force --sign "$SIGN_IDENTITY" --identifier "$BUNDLE_ID" "$APP"
 
 if [[ "${1:-}" == "--install" ]]; then
   mkdir -p "$HOME/Applications"
-  /bin/rm -rf "$HOME/Applications/ShareX.app"
-  cp -R "$APP" "$HOME/Applications/ShareX.app"
-  echo "Installed: $HOME/Applications/ShareX.app"
+  /bin/rm -rf "$HOME/Applications/$APP_NAME.app"
+  cp -R "$APP" "$HOME/Applications/$APP_NAME.app"
+  echo "Installed: $HOME/Applications/$APP_NAME.app"
 else
   echo "Built: $APP"
 fi

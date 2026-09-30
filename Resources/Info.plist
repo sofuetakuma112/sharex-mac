@@ -5,17 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ja</string>
 	<key>CFBundleDisplayName</key>
-	<string>ShareX</string>
+	<string>sharex-mac</string>
 	<key>CFBundleExecutable</key>
-	<string>ShareX</string>
+	<string>sharex-mac</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>local.sharex.mac</string>
+	<string>io.github.sofuetakuma112.sharex-mac</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ShareX</string>
+	<string>sharex-mac</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

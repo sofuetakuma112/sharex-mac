@@ -33,7 +33,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
 
     private func setUpStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        let image = NSImage(systemSymbolName: "camera.viewfinder", accessibilityDescription: "ShareX")
+        let image = NSImage(systemSymbolName: "camera.viewfinder", accessibilityDescription: "sharex-mac")
         image?.isTemplate = true
         statusItem.button?.image = image
 
@@ -60,7 +60,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
         menu.addItem(launchAtLoginItem)
         menu.addItem(NSMenuItem(title: "画面収録の権限設定を開く…", action: #selector(openScreenRecordingSettings), keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "ShareX を終了", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "sharex-mac を終了", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         menu.items.forEach { if $0.action != #selector(NSApplication.terminate(_:)) { $0.target = self } }
         statusItem.menu = menu
@@ -192,7 +192,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
         if !CGPreflightScreenCaptureAccess() {
             let alert = NSAlert()
             alert.messageText = "画面収録の権限が必要です"
-            alert.informativeText = "システム設定 > プライバシーとセキュリティ > 画面収録とシステムオーディオ録音 で ShareX を許可してから、ShareX を再起動してください。"
+            alert.informativeText = "システム設定 > プライバシーとセキュリティ > 画面収録とシステムオーディオ録音 で sharex-mac を許可してから、sharex-mac を再起動してください。"
             alert.addButton(withTitle: "システム設定を開く")
             alert.addButton(withTitle: "キャンセル")
             NSApp.activate(ignoringOtherApps: true)
@@ -206,7 +206,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
 
     private func showError(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "ShareX"
+        alert.messageText = "sharex-mac"
         alert.informativeText = message
         alert.alertStyle = .warning
         NSApp.activate(ignoringOtherApps: true)
