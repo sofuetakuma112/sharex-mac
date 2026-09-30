@@ -36,7 +36,7 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
             backing: .buffered,
             defer: false
         )
-        window.title = "画像履歴"
+        window.title = localized("Image History")
         window.minSize = NSSize(width: 480, height: 320)
         window.isReleasedWhenClosed = false
         if !window.setFrameUsingName("ImageHistoryWindow") {
@@ -70,7 +70,7 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
     private func setUpContent() {
         guard let contentView = window?.contentView else { return }
 
-        searchField.placeholderString = "ファイル名で絞り込み"
+        searchField.placeholderString = localized("Filter by file name")
         searchField.delegate = self
         searchField.sendsSearchStringImmediately = true
 
@@ -83,7 +83,7 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
         sizeSlider.action = #selector(thumbnailSizeChanged)
         sizeSlider.isContinuous = true
         sizeSlider.widthAnchor.constraint(equalToConstant: 140).isActive = true
-        sizeSlider.toolTip = "サムネイルの大きさ"
+        sizeSlider.toolTip = localized("Thumbnail size")
 
         let smallIcon = NSImageView(image: NSImage(systemSymbolName: "photo", accessibilityDescription: nil) ?? NSImage())
         smallIcon.symbolConfiguration = .init(pointSize: 10, weight: .regular)
@@ -188,8 +188,8 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
         collectionView.reloadData()
         collectionView.selectionIndexPaths = Set(images.indices.filter { selectedURLs.contains(images[$0].url) }.map { IndexPath(item: $0, section: 0) })
 
-        countLabel.stringValue = query.isEmpty ? "\(allImages.count) 件" : "\(images.count) / \(allImages.count) 件"
-        emptyLabel.stringValue = allImages.isEmpty ? "キャプチャはまだありません" : "一致する画像はありません"
+        countLabel.stringValue = query.isEmpty ? localized("%d items", allImages.count) : localized("%1$d of %2$d items", images.count, allImages.count)
+        emptyLabel.stringValue = allImages.isEmpty ? localized("No captures yet") : localized("No matching images")
         emptyLabel.isHidden = !images.isEmpty
     }
 
@@ -241,14 +241,14 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
         let selection = selectedImages
         guard !selection.isEmpty else { return nil }
         let menu = NSMenu()
-        menu.addItem(withTitle: "開く", action: #selector(openSelected), keyEquivalent: "")
-        menu.addItem(withTitle: "Finder で表示", action: #selector(revealSelected), keyEquivalent: "")
+        menu.addItem(withTitle: localized("Open"), action: #selector(openSelected), keyEquivalent: "")
+        menu.addItem(withTitle: localized("Show in Finder"), action: #selector(revealSelected), keyEquivalent: "")
         menu.addItem(.separator())
-        let copyItem = menu.addItem(withTitle: "画像をコピー", action: #selector(copyImage), keyEquivalent: "")
+        let copyItem = menu.addItem(withTitle: localized("Copy Image"), action: #selector(copyImage), keyEquivalent: "")
         copyItem.isEnabled = selection.count == 1
-        menu.addItem(withTitle: "ファイルパスをコピー", action: #selector(copyPaths), keyEquivalent: "")
+        menu.addItem(withTitle: localized("Copy File Path"), action: #selector(copyPaths), keyEquivalent: "")
         menu.addItem(.separator())
-        menu.addItem(withTitle: "ゴミ箱に入れる", action: #selector(trashSelected), keyEquivalent: "")
+        menu.addItem(withTitle: localized("Move to Trash"), action: #selector(trashSelected), keyEquivalent: "")
         menu.autoenablesItems = false
         menu.items.forEach { $0.target = self }
         return menu

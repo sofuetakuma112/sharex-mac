@@ -58,9 +58,9 @@ final class CaptureOutput {
 
     private func notify(_ captured: CapturedImage, savedURL: URL?) {
         let content = UNMutableNotificationContent()
-        content.title = savedURL == nil ? "クリップボードにコピーしました" : "キャプチャを保存しました"
+        content.title = savedURL == nil ? localized("Copied to Clipboard") : localized("Capture Saved")
         let dimensions = "\(captured.image.width) × \(captured.image.height)"
-        content.body = savedURL.map { "\($0.lastPathComponent)（\(dimensions)）" } ?? dimensions
+        content.body = savedURL.map { localized("%1$@ (%2$@)", $0.lastPathComponent, dimensions) } ?? dimensions
         if let savedURL {
             content.userInfo = ["path": savedURL.path]
         }

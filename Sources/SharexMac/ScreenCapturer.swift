@@ -23,8 +23,8 @@ enum CaptureError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .displayNotFound: "キャプチャ対象のディスプレイが見つかりません。"
-        case .windowNotFound: "キャプチャ対象のウィンドウが見つかりません。"
+        case .displayNotFound: localized("The display to capture could not be found.")
+        case .windowNotFound: localized("The window to capture could not be found.")
         }
     }
 }

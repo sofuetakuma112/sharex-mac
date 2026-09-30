@@ -16,6 +16,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$(swift build -c release --arch arm64 --show-bin-path)/SharexMac" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/CaptureSound.wav" "$ROOT/Resources/TaskCompletedSound.wav" "$APP/Contents/Resources/"
+cp -R "$ROOT/Resources/ja.lproj" "$APP/Contents/Resources/"
 
 ICONSET="$BUILD_DIR/AppIcon.iconset"
 /bin/rm -rf "$ICONSET"

@@ -33,34 +33,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
 
     private func setUpStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        let image = NSImage(systemSymbolName: "camera.viewfinder", accessibilityDescription: "sharex-mac")
+        let image = NSImage(systemSymbolName: "camera.viewfinder", accessibilityDescription: AppInfo.name)
         image?.isTemplate = true
         statusItem.button?.image = image
 
         let menu = NSMenu()
         menu.delegate = self
-        menu.addItem(menuItem("範囲キャプチャ", hotkey: .region, action: #selector(captureRegion)))
-        menu.addItem(menuItem("ウィンドウキャプチャ", hotkey: .activeWindow, action: #selector(captureActiveWindow)))
-        menu.addItem(menuItem("全画面キャプチャ", hotkey: .fullscreen, action: #selector(captureFullscreen)))
+        menu.addItem(menuItem(localized("Capture Region"), hotkey: .region, action: #selector(captureRegion)))
+        menu.addItem(menuItem(localized("Capture Window"), hotkey: .activeWindow, action: #selector(captureActiveWindow)))
+        menu.addItem(menuItem(localized("Capture Fullscreen"), hotkey: .fullscreen, action: #selector(captureFullscreen)))
         menu.addItem(.separator())
 
-        menu.addItem(NSMenuItem(title: "画像履歴…", action: #selector(showImageHistory), keyEquivalent: ""))
-        let recentItem = NSMenuItem(title: "最近のキャプチャ", action: nil, keyEquivalent: "")
+        menu.addItem(NSMenuItem(title: localized("Image History…"), action: #selector(showImageHistory), keyEquivalent: ""))
+        let recentItem = NSMenuItem(title: localized("Recent Captures"), action: nil, keyEquivalent: "")
         recentMenu.delegate = self
         recentItem.submenu = recentMenu
         menu.addItem(recentItem)
-        menu.addItem(NSMenuItem(title: "スクリーンショットフォルダを開く", action: #selector(openScreenshotsFolder), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: localized("Open Screenshots Folder"), action: #selector(openScreenshotsFolder), keyEquivalent: ""))
         menu.addItem(.separator())
 
-        let afterCaptureItem = NSMenuItem(title: "キャプチャ後の処理", action: nil, keyEquivalent: "")
+        let afterCaptureItem = NSMenuItem(title: localized("After Capture"), action: nil, keyEquivalent: "")
         afterCaptureMenu.delegate = self
         afterCaptureItem.submenu = afterCaptureMenu
         menu.addItem(afterCaptureItem)
-        launchAtLoginItem = NSMenuItem(title: "ログイン時に起動", action: #selector(toggleLaunchAtLogin), keyEquivalent: "")
+        launchAtLoginItem = NSMenuItem(title: localized("Launch at Login"), action: #selector(toggleLaunchAtLogin), keyEquivalent: "")
         menu.addItem(launchAtLoginItem)
-        menu.addItem(NSMenuItem(title: "画面収録の権限設定を開く…", action: #selector(openScreenRecordingSettings), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: localized("Open Screen Recording Settings…"), action: #selector(openScreenRecordingSettings), keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "sharex-mac を終了", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: localized("Quit sharex-mac"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         menu.items.forEach { if $0.action != #selector(NSApplication.terminate(_:)) { $0.target = self } }
         statusItem.menu = menu
@@ -78,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
             !hotkeyManager.register(hotkey) { [weak self] in self?.startCapture(mode, delay: 0) }
         }
         if !failed.isEmpty {
-            showError("一部のホットキーを登録できませんでした。他のアプリが同じショートカットを使用している可能性があります。")
+            showError(localized("Some hotkeys could not be registered. Another app may be using the same shortcut."))
         }
     }
 
@@ -96,7 +96,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
         recentMenu.removeAllItems()
         let files = settings.recentFiles
         if files.isEmpty {
-            let empty = NSMenuItem(title: "なし", action: nil, keyEquivalent: "")
+            let empty = NSMenuItem(title: localized("None"), action: nil, keyEquivalent: "")
             empty.isEnabled = false
             recentMenu.addItem(empty)
             return
@@ -112,7 +112,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
             recentMenu.addItem(item)
         }
         recentMenu.addItem(.separator())
-        let showAll = NSMenuItem(title: "すべて表示…", action: #selector(showImageHistory), keyEquivalent: "")
+        let showAll = NSMenuItem(title: localized("Show All…"), action: #selector(showImageHistory), keyEquivalent: "")
         showAll.target = self
         recentMenu.addItem(showAll)
     }
@@ -191,10 +191,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
     private func handleCaptureError(_ error: Error) {
         if !CGPreflightScreenCaptureAccess() {
             let alert = NSAlert()
-            alert.messageText = "画面収録の権限が必要です"
-            alert.informativeText = "システム設定 > プライバシーとセキュリティ > 画面収録とシステムオーディオ録音 で sharex-mac を許可してから、sharex-mac を再起動してください。"
-            alert.addButton(withTitle: "システム設定を開く")
-            alert.addButton(withTitle: "キャンセル")
+            alert.messageText = localized("Screen Recording Permission Required")
+            alert.informativeText = localized("Allow sharex-mac in System Settings > Privacy & Security > Screen & System Audio Recording, then restart sharex-mac.")
+            alert.addButton(withTitle: localized("Open System Settings"))
+            alert.addButton(withTitle: localized("Cancel"))
             NSApp.activate(ignoringOtherApps: true)
             if alert.runModal() == .alertFirstButtonReturn {
                 openScreenRecordingSettings()
@@ -206,7 +206,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
 
     private func showError(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "sharex-mac"
+        alert.messageText = AppInfo.name
         alert.informativeText = message
         alert.alertStyle = .warning
         NSApp.activate(ignoringOtherApps: true)
@@ -237,7 +237,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUser
                 try SMAppService.mainApp.register()
             }
         } catch {
-            showError("ログイン時の起動設定を変更できませんでした: \(error.localizedDescription)")
+            showError(localized("Could not change the launch at login setting: %@", error.localizedDescription))
         }
     }
 

@@ -8,10 +8,10 @@ enum AfterCaptureTask: String, CaseIterable {
 
     var title: String {
         switch self {
-        case .saveToFile: "ファイルに保存"
-        case .copyToClipboard: "クリップボードにコピー"
-        case .showNotification: "通知を表示"
-        case .playSound: "サウンドを再生"
+        case .saveToFile: localized("Save to File")
+        case .copyToClipboard: localized("Copy to Clipboard")
+        case .showNotification: localized("Show Notification")
+        case .playSound: localized("Play Sound")
         }
     }
 }
