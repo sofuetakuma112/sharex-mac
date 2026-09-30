@@ -225,6 +225,7 @@ final class ImageHistoryWindowController: NSWindowController, NSWindowDelegate, 
         guard let historyItem = item as? HistoryItem else { return item }
         let image = images[indexPath.item]
         historyItem.configure(url: image.url, toolTip: "\(image.url.path)\n\(dateFormatter.string(from: image.date))")
+        historyItem.isSelected = collectionView.selectionIndexPaths.contains(indexPath)
         thumbnails.thumbnail(for: image.url, maxPixelSize: thumbnailPixelSize) { [weak historyItem] thumbnail in
             historyItem?.setThumbnail(thumbnail, for: image.url)
         }
@@ -350,11 +351,16 @@ private final class HistoryItem: NSCollectionViewItem {
 
         thumbnailView.imageScaling = .scaleProportionallyDown
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        thumbnailView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        thumbnailView.setContentHuggingPriority(.defaultLow, for: .vertical)
 
         nameLabel.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
         nameLabel.alignment = .center
         nameLabel.lineBreakMode = .byTruncatingMiddle
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        nameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         container.addSubview(thumbnailView)
         container.addSubview(nameLabel)
@@ -372,6 +378,7 @@ private final class HistoryItem: NSCollectionViewItem {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        isSelected = false
         url = nil
         thumbnailView.image = nil
     }
